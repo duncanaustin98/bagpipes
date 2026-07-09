@@ -107,6 +107,7 @@ class fit_catalogue(object):
         em_line_fluxes_to_save = ['Halpha', 'Hbeta', 'Hgamma', 'OIII_5007', 'OIII_4959', 'NII_6548', 'NII_6584'],
         em_line_ratios_to_save = ["OIII_4959+OIII_5007__Hbeta", "Halpha__Hbeta", "Hbeta__Hgamma", "NII_6548+NII_6584__Halpha"],
         load_data_kwargs = {},
+        plot_csfh = True,
     ):
 
         self.IDs = np.array(IDs).astype(str)
@@ -122,6 +123,7 @@ class fit_catalogue(object):
         self.spectrum_exists = spectrum_exists
         self.photometry_exists = photometry_exists
         self.make_plots = make_plots
+        self.plot_csfh = plot_csfh
         self.cat_filt_list = cat_filt_list
         self.vary_filt_list = vary_filt_list
         self.redshifts = redshifts
@@ -365,15 +367,16 @@ class fit_catalogue(object):
                     self.obj_fit.plot_corner,
                     self.obj_fit.plot_1d_posterior,
                     self.obj_fit.plot_sfh_posterior,
-                    self.obj_fit.plot_csfh_posterior
                 ]
                 names = [
                     "spectrum_posterior",
                     "corner",
                     "1d_posterior",
                     "sfh_posterior",
-                    "csfh_posterior"
                 ]
+                if self.plot_csfh:
+                    plots += [self.obj_fit.plot_csfh_posterior]
+                    names += ["csfh_posterior"]
                 if "calib" in list(self.obj_fit.fitted_model.fit_instructions):
                     plots.append(self.obj_fit.plot_calibration)
                     names.append("calibration")
